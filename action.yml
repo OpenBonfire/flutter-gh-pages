@@ -46,6 +46,8 @@ runs:
         fi
       shell: bash
       working-directory: ${{inputs.workingDir}}
+    - name: Copy _headers file
+      run: cp _headers build/web/
     - run: git config user.name github-actions
       shell: bash
       working-directory: ${{inputs.workingDir}}
