@@ -1,11 +1,9 @@
 name: "Deploy Flutter web app to github pages"
 description: "Automates the build and deployment of your Flutter web app on Github gh pages"
 author: "bluefireteam"
-
 branding:
   color: blue
   icon: code
-
 inputs:
   webRenderer:
     description: "Which web renderer to be used, default is auto"
@@ -31,7 +29,6 @@ inputs:
     description: "Compile to wasm, if used this will ignore the webRenderer flag, default is false"
     required: false
     default: "false"
-
 runs:
   using: "composite"
   steps:
@@ -46,8 +43,6 @@ runs:
         fi
       shell: bash
       working-directory: ${{inputs.workingDir}}
-    - name: Copy _headers file
-      run: cp _headers build/web/
     - run: git config user.name github-actions
       shell: bash
       working-directory: ${{inputs.workingDir}}
@@ -55,6 +50,13 @@ runs:
       shell: bash
       working-directory: ${{inputs.workingDir}}
     - run: git --work-tree build/web add --all
+      shell: bash
+      working-directory: ${{inputs.workingDir}}
+    - name: Create _headers file
+      run: |
+        echo "/*" > build/web/_headers
+        echo "  Cross-Origin-Embedder-Policy: credentialless" >> build/web/_headers
+        echo "  Cross-Origin-Opener-Policy: same-origin" >> build/web/_headers
       shell: bash
       working-directory: ${{inputs.workingDir}}
     - run: git commit -m "Automatic deployment by github-actions"
